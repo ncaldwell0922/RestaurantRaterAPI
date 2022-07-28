@@ -1,3 +1,4 @@
+using RestaurantRaterAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantRaterAPI
