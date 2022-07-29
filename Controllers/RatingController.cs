@@ -10,7 +10,7 @@ namespace RestaurantRaterAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class RatingController
+    public class RatingController : Controller
     {
         private RestaurantDbContext _context;
         public RatingController(RestaurantDbContext context)
@@ -19,7 +19,7 @@ namespace RestaurantRaterAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostRestaurant([FromForm] RatingEdit model) 
+        public async Task<IActionResult> PostRating([FromForm] RatingEdit model) 
         {
             if (!ModelState.IsValid)
             {
@@ -37,7 +37,5 @@ namespace RestaurantRaterAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-
-
     }
 }

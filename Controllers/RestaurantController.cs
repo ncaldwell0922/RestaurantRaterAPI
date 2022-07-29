@@ -23,6 +23,7 @@ namespace RestaurantRaterAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
+            
             _context.Restaurants.Add(new Restaurant()
             {
                 Name = model.Name,
@@ -33,10 +34,20 @@ namespace RestaurantRaterAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRestaurants()
+        public async Task<IActionResult> GetAllRestaurants()
         {
-            var restaurants = await _context.Restaurants.ToListAsync();
-            return Ok(restaurants);
+            var restaurants = await _context.Restaurants.Include(r => r.Ratings).ToListAsync();
+            List<RestaurantListItem> restaurantList = _context.Restaurants.Select(r => new RestaurantListItem()
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Location = r.Location,
+                AverageFoodScore = r.AverageFoodScore,
+                AverageCleanlinessScore = r.AverageCleanlinessScore,
+                AverageAtmosphereScore = r.AverageAtmosphereScore,
+
+            }).ToList();
+            return Ok(restaurantList);
         }
 
 
@@ -44,7 +55,7 @@ namespace RestaurantRaterAPI.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetRestaurantById(int id)
         {
-            var restaurant = await _context.Restaurants.FindAsync(id);
+            var restaurant = await _context.Restaurants.Include(r => r.Ratings).FirstOrDefaultAsync(r => r.Id == id);
 
             if(restaurant == null)
             {
